@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gráfico de Radar Adaptativo Notion</title>
-    <!-- Importamos Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Por defecto: Color de fondo exacto del Modo Claro de Notion */
         body {
             background-color: #ffffff; 
             margin: 0;
@@ -20,8 +18,6 @@
             box-sizing: border-box;
             overflow: hidden;
         }
-
-        /* MAGIA: Si el sistema está en Modo Oscuro, cambia al fondo oscuro de Notion */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: #191919; 
@@ -38,7 +34,6 @@
             box-sizing: border-box;
         }
         canvas {
-            /* Dejamos que CSS maneje el máximo posible sin desbordar */
             max-width: 100% !important;
             max-height: 100% !important;
         }
@@ -95,13 +90,13 @@
                 scales: {
                     r: {
                         angleLines: {
-                            color: 'rgba(128, 128, 128, 0.3)' // Líneas internas sutiles
+                            color: 'rgba(128, 128, 128, 0.3)'
                         },
                         grid: {
-                            color: 'rgba(128, 128, 128, 0.3)' // Telaraña interna sutil
+                            color: 'rgba(128, 128, 128, 0.3)'
                         },
                         pointLabels: {
-                            color: '#888888', // Un color gris medio para que se lea bien en fondos claros o oscuros
+                            color: '#888888',
                             font: {
                                 size: 13,
                                 family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto'
