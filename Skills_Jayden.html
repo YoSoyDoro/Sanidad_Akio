@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Radar Adaptativo Notion</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #ffffff; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #191919; 
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        canvas {
+            /* Dejamos que CSS maneje el máximo posible sin desbordar */
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chart-container">
+        <canvas id="radarChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        
+        // Detectar la preferencia de tema (claro / oscuro)
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // Función con los nuevos colores exactos
+        function getThemeColors(isDarkMode) {
+            return {
+                // Blanco puro para oscuro, Negro puro para claro (Etiquetas)
+                labels: isDarkMode ? '#ffffff' : '#000000', 
+                // Blanco al 30% para oscuro, Negro al 30% para claro (Telaraña)
+                gridLines: isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)'
+            };
+        }
+
+        let currentColors = getThemeColors(mediaQuery.matches);
+        
+        const data = {
+            labels: [
+                'Liderazgo',
+                'Cocina',
+                'Conducción',
+                'Primeros Auxilios',
+                'Charlatanería',
+                'Esconderse o Esconder', // ¡Comilla añadida aquí!
+                'Cerrajería',
+                'Tecnología',
+                'Mecánica'
+            ],
+            datasets: [
+                {
+                    label: 'Actual', // Nombre de la primera variable
+                    data: [8, 9, 5, 7, 7, 2, 0, 6, 0], 
+                   fill: true, 
+                    backgroundColor: 'rgba(255, 0, 127, 0.25)',
+                    borderColor: 'rgba(255, 0, 127, 1)', // Rosa Eléctrico
+                    borderWidth: 3, 
+                    pointBackgroundColor: 'rgba(255, 0, 127, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(255, 0, 127, 1)',
+                },
+                {
+                    label: 'Sano', // Nombre de la segunda variable
+                    data: [9, 10, 8, 8, 7, 9, 0, 8, 0], // Los valores de la segunda variable
+                    fill: false, // Mantiene relleno suave
+                    backgroundColor: 'rgba(178, 34, 34, 0.25)', // Rojo para contrastar
+                    borderColor: 'rgba(178, 34, 34, 1)', 
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(178, 34, 34, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(178, 34, 34, 1)',
+                },
+                {
+                    label: 'Prime', // LA TERCERA VARIABLE
+                    data: [10, 2, 0, 10, 7, 2, 0, 10, 0], // Nuevos valores de ejemplo
+                    fill: false, 
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(138, 43, 226, 1)', // Violeta Eléctrico
+                    borderWidth: 3,
+                    pointBackgroundColor: 'rgba(138, 43, 226, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(138, 43, 226, 1)',
+                }
+            ]
+        };
+
+        const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    padding: {
+                        top: 20,
+                        bottom: 30,
+                        left: 30,
+                        right: 30
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: currentColors.gridLines 
+                        },
+                        grid: {
+                            color: currentColors.gridLines 
+                        },
+                        pointLabels: {
+                            color: currentColors.labels, 
+                            font: {
+                                size: 13,
+                                family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto'
+                            }
+                        },
+                        ticks: {
+                            display: false,
+                            backdropColor: 'transparent',
+                            stepSize: 2
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                }
+            }
+        };
+
+        const radarChart = new Chart(ctx, config);
+
+        // Escuchar cambios de tema en tiempo real
+        mediaQuery.addEventListener('change', (e) => {
+            const newColors = getThemeColors(e.matches);
+            
+            radarChart.options.scales.r.pointLabels.color = newColors.labels;
+            radarChart.options.scales.r.angleLines.color = newColors.gridLines;
+            radarChart.options.scales.r.grid.color = newColors.gridLines;
+            
+            radarChart.update();
+        });
+    </script>
+</body>
+</html>
